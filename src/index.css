@@ -64,14 +64,27 @@
   }
 }
 
+/* Add styles for responsive table container */
+.table-container {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap; /* Ensure table doesn't wrap its rows */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
+}
+
+.table-container table {
+  width: 100%;
+  min-width: 600px; /* Guarantee horizontal scroll if content exceeds screen */
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
+  }
   html {
     @apply font-sans;
-    }
+  }
 }
