@@ -690,7 +690,8 @@ function AuthScreen({ form, loading, error, notice, onSubmit, onFormChange }) {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.18),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(59,130,246,0.16),_transparent_32%),linear-gradient(135deg,_#f8fafc_0%,_#eff6ff_48%,_#ecfeff_100%)] text-slate-900 dark:bg-slate-950 dark:text-white">
       <div className="grid min-h-screen lg:grid-cols-[1.08fr,0.92fr]">
-        <div className="flex flex-col justify-between gap-10 px-6 py-10 sm:px-10 lg:px-16 lg:py-14">
+        {/* Left panel - hidden on mobile, visible on large screens */}
+        <div className="hidden lg:flex lg:flex-col lg:justify-between lg:gap-10 lg:px-6 lg:py-10 xl:px-16 xl:py-14">
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-slate-900 text-white shadow-lg shadow-slate-900/20 dark:bg-white dark:text-slate-900">
               <PiggyBank className="h-6 w-6" />
@@ -706,7 +707,7 @@ function AuthScreen({ form, loading, error, notice, onSubmit, onFormChange }) {
               Supabase Auth
             </Badge>
             <div className="space-y-4">
-              <h1 className="max-w-xl text-4xl font-semibold tracking-tight sm:text-5xl">
+              <h1 className="max-w-xl text-4xl font-semibold tracking-tight xl:text-5xl">
                 Sign in to manage your farm finances securely.
               </h1>
               <p className="max-w-xl text-base leading-7 text-slate-600 dark:text-slate-300">
@@ -738,16 +739,27 @@ function AuthScreen({ form, loading, error, notice, onSubmit, onFormChange }) {
           </p>
         </div>
 
-        <div className="flex items-center justify-center px-6 py-10 sm:px-10 lg:px-16">
+        {/* Mobile header - visible only on small screens */}
+        <div className="flex items-center gap-3 px-4 py-4 lg:hidden">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-slate-900">
+            <PiggyBank className="h-5 w-5" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold tracking-tight">Agri Business Tracker</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Farm Finance</p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center px-4 py-4 sm:px-10 sm:py-10 lg:px-16">
           <Card className="w-full max-w-md rounded-[2rem] border-slate-200 bg-white/95 shadow-2xl shadow-slate-900/10 backdrop-blur dark:border-slate-800 dark:bg-slate-950/95">
-            <CardHeader className="space-y-3">
+            <CardHeader className="space-y-3 px-5 sm:px-6">
               <Badge className="w-fit rounded-full border-0 bg-emerald-500/10 px-3 py-1 text-emerald-700 dark:bg-emerald-400/10 dark:text-emerald-300">
                 Protected access
               </Badge>
               <CardTitle className="text-2xl tracking-tight">Welcome back</CardTitle>
               <CardDescription>Use your email and password to unlock the farm dashboard.</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-5 sm:px-6">
               <form className="space-y-4" onSubmit={onSubmit}>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Email address</label>
@@ -757,6 +769,7 @@ function AuthScreen({ form, loading, error, notice, onSubmit, onFormChange }) {
                     onChange={(event) => onFormChange({ email: event.target.value })}
                     placeholder="name@example.com"
                     autoComplete="email"
+                    className="rounded-xl"
                   />
                 </div>
                 <div className="space-y-2">
@@ -767,6 +780,7 @@ function AuthScreen({ form, loading, error, notice, onSubmit, onFormChange }) {
                     onChange={(event) => onFormChange({ password: event.target.value })}
                     placeholder="••••••••"
                     autoComplete="current-password"
+                    className="rounded-xl"
                   />
                 </div>
 
@@ -1974,31 +1988,39 @@ export default function PigFarmBudgetDashboard() {
           <aside className="hidden w-72 border-r border-slate-200 bg-white lg:block dark:border-slate-800 dark:bg-slate-950">{sidebar}</aside>
           {sidebarOpen && <div className="fixed inset-0 z-40 bg-slate-950/30 lg:hidden" onClick={() => setSidebarOpen(false)}><div className="h-full w-72 bg-white dark:bg-slate-950" onClick={(e) => e.stopPropagation()}>{sidebar}</div></div>}
 
-          <main className="flex-1">
+          <main className="flex-1 min-w-0">
             <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
-              <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-6">
-                <div className="flex items-center gap-3">
-                  <Button variant="outline" size="icon" className="rounded-2xl lg:hidden" onClick={() => setSidebarOpen(true)}><Menu className="h-5 w-5" /></Button>
-                  <div>
-                    <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Agri Business Tracker</h1>
+              <div className="flex items-center justify-between gap-2 px-3 py-3 sm:gap-4 sm:px-6 sm:py-4">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                  <Button variant="outline" size="icon" className="rounded-2xl shrink-0 lg:hidden" onClick={() => setSidebarOpen(true)}>
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                  <div className="min-w-0">
+                    <h1 className="text-lg font-semibold tracking-tight truncate sm:text-xl lg:text-2xl">Agri Business Tracker</h1>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
                   {authUser?.email ? (
-                    <div className="hidden items-center gap-2 rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-300 md:flex">
-                      <Mail className="h-4 w-4" />
-                      <span className="max-w-[180px] truncate">{authUser.email}</span>
+                    <div className="hidden items-center gap-2 rounded-2xl border border-slate-200 px-2 py-1.5 text-xs sm:text-sm text-slate-600 dark:border-slate-800 dark:text-slate-300 lg:flex">
+                      <Mail className="h-4 w-4 shrink-0" />
+                      <span className="max-w-[120px] lg:max-w-[180px] truncate">{authUser.email}</span>
                     </div>
                   ) : null}
-                  <Button variant="outline" size="icon" className="rounded-2xl" onClick={() => setDark((d) => !d)}>{dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}</Button>
-                  <Button variant="outline" size="icon" className="rounded-2xl"><Bell className="h-4 w-4" /></Button>
+                  <Button variant="outline" size="icon" className="rounded-2xl shrink-0" onClick={() => setDark((d) => !d)}>
+                    {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                  </Button>
+                  <Button variant="outline" size="icon" className="rounded-2xl shrink-0 lg:hidden">
+                    <Bell className="h-4 w-4" />
+                  </Button>
                   {authEnabled ? (
-                    <Button variant="outline" className="rounded-2xl" onClick={handleSignOut}>
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Sign out
+                    <Button variant="outline" className="rounded-2xl text-xs px-2 sm:text-sm sm:px-4 shrink-0" onClick={handleSignOut}>
+                      <LogOut className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">Sign out</span>
                     </Button>
                   ) : null}
-                  <Button variant="outline" size="icon" className="rounded-2xl" onClick={() => setActivePage("masters")}><Settings className="h-4 w-4" /></Button>
+                  <Button variant="outline" size="icon" className="rounded-2xl shrink-0" onClick={() => setActivePage("masters")}>
+                    <Settings className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </header>
@@ -2013,18 +2035,18 @@ export default function PigFarmBudgetDashboard() {
               {activePage === "dashboard" && (
                 <>
                   <section className="space-y-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <h2 className="text-2xl font-semibold">Overview</h2>
+                        <h2 className="text-xl font-semibold sm:text-2xl">Overview</h2>
                         <p className="text-sm text-slate-500 dark:text-slate-400">Quick snapshot of your farm performance</p>
                       </div>
                     </div>
-                    <Card className="rounded-3xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
-                      <CardHeader>
+                    <Card className="rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
+                      <CardHeader className="pb-3">
                         <CardTitle className="text-base">Report Filters</CardTitle>
                         <CardDescription>Filter the dashboard by farm type, farm, and batch.</CardDescription>
                       </CardHeader>
-                      <CardContent className="grid gap-3 md:grid-cols-4">
+                      <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                         <SelectCell
                           value={reportFarmTypeId}
                           onChange={(value) => {
@@ -2072,24 +2094,24 @@ export default function PigFarmBudgetDashboard() {
                             setReportBatchId("");
                           }}
                         >
-                          Clear Filters
+                          Clear
                         </Button>
                       </CardContent>
                     </Card>
-                    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                       <SummaryCard title="Net Profit" value={currency(reportNet)} icon={PiggyBank} trend={reportExpenseTotal > 0 ? (reportNet / reportExpenseTotal) * 100 : 0} color={reportNet >= 0 ? "green" : "red"} />
                       <SummaryCard title="Total Sales" value={currency(reportSaleTotal)} icon={TrendingUp} color="blue" />
                       <SummaryCard title="Total Cost" value={currency(reportExpenseTotal + otherExpenses)} icon={Wallet} color="red" />
                       <SummaryCard title="Total Expenses" value={currency(reportExpenseTotal)} icon={ShoppingCart} color="orange" />
                     </div>
                     <div className="grid gap-4 xl:grid-cols-2">
-                      <Card className="rounded-3xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
-                        <CardHeader><CardTitle>Financial Flow</CardTitle><CardDescription>Sales vs cost overview</CardDescription></CardHeader>
-                        <CardContent><div className="h-64"><ResponsiveContainer><BarChart data={[{ name: "Sales", value: reportSaleTotal, color: "#10b981" }, { name: "Expenses", value: reportExpenseTotal, color: "#ef4444" }]}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis /><Tooltip formatter={(v) => currency(v)} /><Bar dataKey="value" radius={[10,10,0,0]}>{[{ name: "Sales", value: reportSaleTotal, color: "#10b981" }, { name: "Expenses", value: reportExpenseTotal, color: "#ef4444" }].map((entry, i) => <Cell key={i} fill={entry.color} />)}</Bar></BarChart></ResponsiveContainer></div></CardContent>
+                      <Card className="rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
+                        <CardHeader className="pb-3"><CardTitle className="text-base">Financial Flow</CardTitle><CardDescription>Sales vs cost overview</CardDescription></CardHeader>
+                        <CardContent><div className="h-52 sm:h-64"><ResponsiveContainer><BarChart data={[{ name: "Sales", value: reportSaleTotal, color: "#10b981" }, { name: "Expenses", value: reportExpenseTotal, color: "#ef4444" }]}><CartesianGrid strokeDasharray="3 3" /><XAxis dataKey="name" /><YAxis /><Tooltip formatter={(v) => currency(v)} /><Bar dataKey="value" radius={[10,10,0,0]}>{[{ name: "Sales", value: reportSaleTotal, color: "#10b981" }, { name: "Expenses", value: reportExpenseTotal, color: "#ef4444" }].map((entry, i) => <Cell key={i} fill={entry.color} />)}</Bar></BarChart></ResponsiveContainer></div></CardContent>
                       </Card>
-                      <Card className="rounded-3xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
-                        <CardHeader><CardTitle>Expenses per Category</CardTitle><CardDescription>Filtered expense composition by category</CardDescription></CardHeader>
-                        <CardContent><div className="h-64"><ResponsiveContainer><PieChart><Pie data={expenseCategoryChartData} dataKey="value" nameKey="name" outerRadius={95} innerRadius={50} paddingAngle={3}>{expenseCategoryChartData.map((entry, i) => <Cell key={entry.name} fill={pieColors[i % pieColors.length]} />)}</Pie><Tooltip formatter={(v) => currency(v)} /><Legend /></PieChart></ResponsiveContainer></div></CardContent>
+                      <Card className="rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
+                        <CardHeader className="pb-3"><CardTitle className="text-base">Expenses per Category</CardTitle><CardDescription>Filtered expense composition</CardDescription></CardHeader>
+                        <CardContent><div className="h-52 sm:h-64"><ResponsiveContainer><PieChart><Pie data={expenseCategoryChartData} dataKey="value" nameKey="name" outerRadius={70} innerRadius={35} paddingAngle={3}>{expenseCategoryChartData.map((entry, i) => <Cell key={entry.name} fill={pieColors[i % pieColors.length]} />)}</Pie><Tooltip formatter={(v) => currency(v)} /><Legend /></PieChart></ResponsiveContainer></div></CardContent>
                       </Card>
                     </div>
                   </section>
@@ -2098,9 +2120,9 @@ export default function PigFarmBudgetDashboard() {
 
               {activePage !== "dashboard" && (
                 <section className="space-y-4">
-                  <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <h2 className="text-xl font-semibold">
+                  <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="min-w-0">
+                      <h2 className="text-lg font-semibold sm:text-xl truncate">
                         {activePage === "sales"
                           ? "Sales"
                           : activePage === "expenses"
@@ -2109,7 +2131,7 @@ export default function PigFarmBudgetDashboard() {
                               ? "Reports"
                               : "Masters"}
                       </h2>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                      <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-1">
                         {activePage === "sales"
                           ? "Record pig sales and calculate totals."
                           : activePage === "expenses"
@@ -2119,8 +2141,8 @@ export default function PigFarmBudgetDashboard() {
                             : "Maintain generic master tables for all farm types."}
                       </p>
                     </div>
-                    <Button variant="outline" onClick={() => setActivePage("dashboard")} className="rounded-2xl">
-                      Back to Dashboard
+                    <Button variant="outline" onClick={() => setActivePage("dashboard")} className="rounded-2xl shrink-0 text-sm">
+                      Back
                     </Button>
                   </div>
 
@@ -2138,20 +2160,20 @@ export default function PigFarmBudgetDashboard() {
 
                   {activePage === "masters" && (
                     <>
-                      <div className="grid gap-3 md:grid-cols-4">
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Farm Types</p>
                           <p className="mt-2 text-lg font-semibold">{masterData.farmTypes.length}</p>
                         </div>
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Farms</p>
                           <p className="mt-2 text-lg font-semibold">{masterData.farms.length}</p>
                         </div>
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Batches</p>
                           <p className="mt-2 text-lg font-semibold">{masterData.batches.length}</p>
                         </div>
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Categories</p>
                           <p className="mt-2 text-lg font-semibold">{masterData.categories.length}</p>
                         </div>
@@ -2163,9 +2185,9 @@ export default function PigFarmBudgetDashboard() {
                         </div>
                       )}
 
-                      <div className="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)]">
+                      <div className="grid gap-4 lg:grid-cols-[260px_minmax(0,1fr)]">
                         <Card className="rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
-                          <CardHeader>
+                          <CardHeader className="pb-3">
                             <CardTitle className="text-base">Masters Menu</CardTitle>
                             <CardDescription>Pick a section to keep the page focused.</CardDescription>
                           </CardHeader>
@@ -2175,14 +2197,14 @@ export default function PigFarmBudgetDashboard() {
                                 key={section.id}
                                 type="button"
                                 onClick={() => setMastersSection(section.id)}
-                                className={`w-full rounded-2xl border px-4 py-3 text-left transition ${
+                                className={`w-full rounded-2xl border px-3 py-2 text-left transition sm:px-4 sm:py-3 ${
                                   mastersSection === section.id
                                     ? "border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900"
                                     : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 dark:hover:border-slate-700 dark:hover:bg-slate-900"
                                 }`}
                               >
                                 <p className="text-sm font-semibold">{section.label}</p>
-                                <p className="text-xs opacity-75">{section.description}</p>
+                                <p className="text-xs opacity-75 hidden sm:block">{section.description}</p>
                               </button>
                             ))}
                           </CardContent>
@@ -2523,20 +2545,20 @@ export default function PigFarmBudgetDashboard() {
 
                   {activePage === "reports" && (
                     <>
-                      <div className="grid gap-3 md:grid-cols-4">
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Sales in Scope</p>
                           <p className="mt-2 text-lg font-semibold">{currency(reportSaleTotal)}</p>
                         </div>
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Expenses in Scope</p>
                           <p className="mt-2 text-lg font-semibold">{currency(reportExpenseTotal)}</p>
                         </div>
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Net in Scope</p>
                           <p className="mt-2 text-lg font-semibold">{currency(reportNet)}</p>
                         </div>
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Batches in Scope</p>
                           <p className="mt-2 text-lg font-semibold">
                             {reportBatchId ? 1 : reportBatchOptions.length}
@@ -2545,11 +2567,11 @@ export default function PigFarmBudgetDashboard() {
                       </div>
 
                       <Card className="rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
-                        <CardHeader>
+                        <CardHeader className="pb-3">
                           <CardTitle className="text-base">Report Filters</CardTitle>
                           <CardDescription>Filter the dashboard by farm type, farm, and batch.</CardDescription>
                         </CardHeader>
-                        <CardContent className="grid gap-3 md:grid-cols-4">
+                        <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                           <SelectCell
                             value={reportFarmTypeId}
                             onChange={(value) => {
@@ -2597,19 +2619,19 @@ export default function PigFarmBudgetDashboard() {
                               setReportBatchId("");
                             }}
                           >
-                            Clear Filters
+                            Clear
                           </Button>
                         </CardContent>
                       </Card>
 
-                      <div className="grid gap-4 xl:grid-cols-2">
+                      <div className="grid gap-4 lg:grid-cols-2">
                         <Card className="rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
-                          <CardHeader>
+                          <CardHeader className="pb-3">
                             <CardTitle className="text-base">Batch Summary</CardTitle>
-                            <CardDescription>Totals grouped by batch for the selected scope.</CardDescription>
+                            <CardDescription className="hidden sm:block">Totals grouped by batch for the selected scope.</CardDescription>
                           </CardHeader>
                           <CardContent>
-                            <div className="h-72">
+                            <div className="h-52 sm:h-72">
                               <ResponsiveContainer>
                                 <BarChart data={reportBatchChartData}>
                                   <CartesianGrid strokeDasharray="3 3" />
@@ -2623,17 +2645,18 @@ export default function PigFarmBudgetDashboard() {
                               </ResponsiveContainer>
                             </div>
                             <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
-                              <Table>
-                                <TableHeader>
-                                  <TableRow>
-                                    <TableHead>Batch</TableHead>
-                                    <TableHead>Farm</TableHead>
-                                    <TableHead>Sales</TableHead>
-                                    <TableHead>Expenses</TableHead>
-                                    <TableHead>Net</TableHead>
-                                  </TableRow>
-                                </TableHeader>
-                              <TableBody>
+                              <ScrollArea className="w-full">
+                                <Table className="min-w-[500px]">
+                                  <TableHeader>
+                                    <TableRow>
+                                      <TableHead className="whitespace-nowrap">Batch</TableHead>
+                                      <TableHead className="whitespace-nowrap">Farm</TableHead>
+                                      <TableHead className="whitespace-nowrap">Sales</TableHead>
+                                      <TableHead className="whitespace-nowrap">Expenses</TableHead>
+                                      <TableHead className="whitespace-nowrap">Net</TableHead>
+                                    </TableRow>
+                                  </TableHeader>
+                                <TableBody>
                                 {reportBatchBreakdown.map(({ batch, saleTotal, expenseTotal, net }) => (
                                   <TableRow key={batch.id}>
                                       <TableCell>{batch.name}</TableCell>
@@ -2645,14 +2668,15 @@ export default function PigFarmBudgetDashboard() {
                                   ))}
                                 </TableBody>
                               </Table>
+                              </ScrollArea>
                             </div>
                           </CardContent>
                         </Card>
 
                         <Card className="rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
-                          <CardHeader>
+                          <CardHeader className="pb-3">
                             <CardTitle className="text-base">Filtered Rows</CardTitle>
-                            <CardDescription>Use this to inspect the exact transactions behind the totals.</CardDescription>
+                            <CardDescription className="hidden sm:block">Use this to inspect the exact transactions behind the totals.</CardDescription>
                           </CardHeader>
                           <CardContent className="space-y-4">
                             <div className="space-y-3">
@@ -2660,14 +2684,14 @@ export default function PigFarmBudgetDashboard() {
                                 <p className="mb-2 text-sm font-medium text-slate-500 dark:text-slate-400">Sales</p>
                                 <div className="space-y-2">
                                   {reportSales.slice(0, 5).map((row) => (
-                                    <div key={row.id} className="flex items-center justify-between rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-800">
-                                      <div>
-                                        <p className="font-medium">{getSaleLabel(row, masterData).item || "Sale"}</p>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                                    <div key={row.id} className="flex items-center justify-between rounded-2xl border border-slate-200 px-3 py-2 sm:px-4 sm:py-3 dark:border-slate-800">
+                                      <div className="min-w-0 flex-1">
+                                        <p className="font-medium truncate">{getSaleLabel(row, masterData).item || "Sale"}</p>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
                                           {row.date} · {row.farm_name || ""} {row.batch_name ? `· ${row.batch_name}` : ""}
                                         </p>
                                       </div>
-                                      <p className="font-semibold">{currency(getSaleAmount(row))}</p>
+                                      <p className="font-semibold shrink-0 ml-2">{currency(getSaleAmount(row))}</p>
                                     </div>
                                   ))}
                                   {!reportSales.length && (
@@ -2680,14 +2704,14 @@ export default function PigFarmBudgetDashboard() {
                                 <p className="mb-2 text-sm font-medium text-slate-500 dark:text-slate-400">Expenses</p>
                                 <div className="space-y-2">
                                   {reportExpenses.slice(0, 5).map((row) => (
-                                    <div key={row.id} className="flex items-center justify-between rounded-2xl border border-slate-200 px-4 py-3 dark:border-slate-800">
-                                      <div>
-                                        <p className="font-medium">{getExpenseLabel(row, masterData).subcategory || getExpenseLabel(row, masterData).category || "Expense"}</p>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                                    <div key={row.id} className="flex items-center justify-between rounded-2xl border border-slate-200 px-3 py-2 sm:px-4 sm:py-3 dark:border-slate-800">
+                                      <div className="min-w-0 flex-1">
+                                        <p className="font-medium truncate">{getExpenseLabel(row, masterData).subcategory || getExpenseLabel(row, masterData).category || "Expense"}</p>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
                                           {row.date} · {row.farm_name || ""} {row.batch_name ? `· ${row.batch_name}` : ""}
                                         </p>
                                       </div>
-                                      <p className="font-semibold">{currency(getExpenseAmount(row))}</p>
+                                      <p className="font-semibold shrink-0 ml-2">{currency(getExpenseAmount(row))}</p>
                                     </div>
                                   ))}
                                   {!reportExpenses.length && (
@@ -2705,11 +2729,11 @@ export default function PigFarmBudgetDashboard() {
                   {activePage === "sales" && (
                     <>
                       <Card className="rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
-                        <CardHeader>
+                        <CardHeader className="pb-3">
                           <CardTitle className="text-base">Report Filters</CardTitle>
                           <CardDescription>Filter sales by farm type, farm, and batch.</CardDescription>
                         </CardHeader>
-                        <CardContent className="grid gap-3 md:grid-cols-4">
+                        <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                           <SelectCell
                             value={reportFarmTypeId}
                             onChange={(value) => {
@@ -2757,53 +2781,54 @@ export default function PigFarmBudgetDashboard() {
                               setReportBatchId("");
                             }}
                           >
-                            Clear Filters
+                            Clear
                           </Button>
                         </CardContent>
                       </Card>
-                      <div className="grid gap-3 md:grid-cols-3">
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Total Sales</p>
                           <p className="mt-2 text-lg font-semibold">{currency(visibleSalesTotal)}</p>
                         </div>
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Total Weight</p>
                           <p className="mt-2 text-lg font-semibold">{visibleSalesWeight} kg</p>
                         </div>
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Profit</p>
                           <p className="mt-2 text-lg font-semibold">{currency(visibleSalesTotal - (visibleExpenseTotal + otherExpenses))}</p>
                         </div>
                       </div>
 
                       <Card className="rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
-                        <CardHeader className="flex flex-row items-center justify-between gap-3">
+                        <CardHeader className="flex flex-col gap-3 pb-3 sm:flex-row sm:items-center sm:justify-between">
                           <div>
                             <CardTitle className="text-base">Sales Table</CardTitle>
-                            <CardDescription>Update the rows below as needed.</CardDescription>
+                            <CardDescription className="hidden sm:block">Update the rows below as needed.</CardDescription>
                           </div>
                           <div className="flex flex-wrap items-center gap-2">
-                            <Button variant="outline" onClick={() => appendSaleDrafts(1)} className="rounded-2xl" type="button" disabled={!recordWritesEnabled}>
-                              <Plus className="mr-2 h-4 w-4" />
-                              Add Row
+                            <Button variant="outline" onClick={() => appendSaleDrafts(1)} className="rounded-2xl text-sm" type="button" disabled={!recordWritesEnabled}>
+                              <Plus className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                              <span className="sm:hidden">Add</span>
+                              <span className="hidden sm:inline">Add Row</span>
                             </Button>
-                            <Button onClick={() => setSaleDialogOpen(true)} className="rounded-2xl" type="button" disabled={!recordWritesEnabled}>
-                              New Sale
+                            <Button onClick={() => setSaleDialogOpen(true)} className="rounded-2xl text-sm" type="button" disabled={!recordWritesEnabled}>
+                              New
                             </Button>
                           </div>
                         </CardHeader>
                         <CardContent>
                           <ScrollArea className="w-full">
-                            <Table>
+                            <Table className="min-w-[700px]">
                               <TableHeader>
                                 <TableRow>
-                                  <TableHead>Date</TableHead>
-                                  <TableHead>Farm</TableHead>
-                                  <TableHead>Batch</TableHead>
-                                  <TableHead>{salesQuantityHeader}</TableHead>
-                                  <TableHead>{salesPriceHeader}</TableHead>
-                                  <TableHead>Total</TableHead>
-                                  <TableHead>Remarks</TableHead>
+                                  <TableHead className="whitespace-nowrap">Date</TableHead>
+                                  <TableHead className="whitespace-nowrap">Farm</TableHead>
+                                  <TableHead className="whitespace-nowrap">Batch</TableHead>
+                                  <TableHead className="whitespace-nowrap">{salesQuantityHeader}</TableHead>
+                                  <TableHead className="whitespace-nowrap">{salesPriceHeader}</TableHead>
+                                  <TableHead className="whitespace-nowrap">Total</TableHead>
+                                  <TableHead className="whitespace-nowrap">Remarks</TableHead>
                                   <TableHead className="w-[72px]">Action</TableHead>
                                 </TableRow>
                               </TableHeader>
@@ -2870,11 +2895,11 @@ export default function PigFarmBudgetDashboard() {
                   {activePage === "expenses" && (
                     <>
                       <Card className="rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
-                        <CardHeader>
+                        <CardHeader className="pb-3">
                           <CardTitle className="text-base">Report Filters</CardTitle>
                           <CardDescription>Filter expenses by farm type, farm, and batch.</CardDescription>
                         </CardHeader>
-                        <CardContent className="grid gap-3 md:grid-cols-4">
+                        <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                           <SelectCell
                             value={reportFarmTypeId}
                             onChange={(value) => {
@@ -2922,55 +2947,56 @@ export default function PigFarmBudgetDashboard() {
                               setReportBatchId("");
                             }}
                           >
-                            Clear Filters
+                            Clear
                           </Button>
                         </CardContent>
                       </Card>
-                      <div className="grid gap-3 md:grid-cols-3">
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Total Expenses</p>
                           <p className="mt-2 text-lg font-semibold">{currency(visibleExpenseTotal)}</p>
                         </div>
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Other Expenses</p>
                           <p className="mt-2 text-lg font-semibold">{currency(otherExpenses)}</p>
                         </div>
-                        <div className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 dark:border-slate-800 dark:bg-slate-950">
                           <p className="text-sm text-slate-500 dark:text-slate-400">Total Cost</p>
                           <p className="mt-2 text-lg font-semibold">{currency(visibleExpenseTotal + otherExpenses)}</p>
                         </div>
                       </div>
 
                       <Card className="rounded-2xl border-slate-200 dark:border-slate-800 dark:bg-slate-950">
-                        <CardHeader className="flex flex-row items-center justify-between gap-3">
+                        <CardHeader className="flex flex-col gap-3 pb-3 sm:flex-row sm:items-center sm:justify-between">
                           <div>
                             <CardTitle className="text-base">Expenses Table</CardTitle>
-                            <CardDescription>Track feed, piglets, and other costs.</CardDescription>
+                            <CardDescription className="hidden sm:block">Track feed, piglets, and other costs.</CardDescription>
                           </div>
                           <div className="flex flex-wrap items-center gap-2">
-                            <Button variant="outline" onClick={() => appendExpenseDrafts(1)} className="rounded-2xl" type="button" disabled={!recordWritesEnabled}>
-                              <Plus className="mr-2 h-4 w-4" />
-                              Add Row
+                            <Button variant="outline" onClick={() => appendExpenseDrafts(1)} className="rounded-2xl text-sm" type="button" disabled={!recordWritesEnabled}>
+                              <Plus className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
+                              <span className="sm:hidden">Add</span>
+                              <span className="hidden sm:inline">Add Row</span>
                             </Button>
-                            <Button onClick={() => setExpenseDialogOpen(true)} className="rounded-2xl" type="button" disabled={!recordWritesEnabled}>
-                              New Expense
+                            <Button onClick={() => setExpenseDialogOpen(true)} className="rounded-2xl text-sm" type="button" disabled={!recordWritesEnabled}>
+                              New
                             </Button>
                           </div>
                         </CardHeader>
                         <CardContent>
                           <ScrollArea className="w-full">
-                            <Table>
+                            <Table className="min-w-[800px]">
                               <TableHeader>
                                 <TableRow>
-                                  <TableHead>Date</TableHead>
-                                  <TableHead>Farm</TableHead>
-                                  <TableHead>Batch</TableHead>
-                                  <TableHead>Category</TableHead>
-                                  <TableHead>Subcategory</TableHead>
-                                  <TableHead>Qty</TableHead>
-                                  <TableHead>Unit Cost</TableHead>
-                                  <TableHead>Total</TableHead>
-                                  <TableHead>Remarks</TableHead>
+                                  <TableHead className="whitespace-nowrap">Date</TableHead>
+                                  <TableHead className="whitespace-nowrap">Farm</TableHead>
+                                  <TableHead className="whitespace-nowrap">Batch</TableHead>
+                                  <TableHead className="whitespace-nowrap">Category</TableHead>
+                                  <TableHead className="whitespace-nowrap">Subcategory</TableHead>
+                                  <TableHead className="whitespace-nowrap">Qty</TableHead>
+                                  <TableHead className="whitespace-nowrap">Unit Cost</TableHead>
+                                  <TableHead className="whitespace-nowrap">Total</TableHead>
+                                  <TableHead className="whitespace-nowrap">Remarks</TableHead>
                                   <TableHead className="w-[72px]">Action</TableHead>
                                 </TableRow>
                               </TableHeader>
