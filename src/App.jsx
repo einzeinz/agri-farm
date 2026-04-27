@@ -572,15 +572,15 @@ const buildSalePayload = (row, masterData, farmId, batchId) => {
 };
 
 function NumberCell({ value, onChange }) {
-  return <Input type="number" value={value ?? ""} onChange={(e) => onChange(e.target.value === "" ? null : Number(e.target.value))} className="h-9 min-w-[88px] rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900" />;
+  return <Input type="number" value={value ?? ""} onChange={(e) => onChange(e.target.value === "" ? null : Number(e.target.value))} className="h-10 min-w-[88px] rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 sm:h-9" />;
 }
 
 function TextCell({ value, onChange, placeholder }) {
-  return <Input type="text" value={value ?? ""} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} className="h-9 min-w-[120px] rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900" />;
+  return <Input type="text" value={value ?? ""} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} className="h-10 min-w-[120px] rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 sm:h-9" />;
 }
 
 function DateCell({ value, onChange }) {
-  return <Input type="date" value={value ?? ""} onChange={(e) => onChange(e.target.value)} className="h-9 min-w-[140px] rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900" />;
+  return <Input type="date" value={value ?? ""} onChange={(e) => onChange(e.target.value)} className="h-10 min-w-[140px] rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-900 sm:h-9" />;
 }
 
 function SelectCell({ value, onChange, children }) {
@@ -588,7 +588,7 @@ function SelectCell({ value, onChange, children }) {
     <select
       value={value ?? ""}
       onChange={(e) => onChange(e.target.value || null)}
-      className="h-9 min-w-[130px] rounded-xl border border-slate-200 bg-white px-3 text-sm dark:border-slate-700 dark:bg-slate-900"
+      className="h-10 min-w-[130px] rounded-xl border border-slate-200 bg-white px-3 text-sm dark:border-slate-700 dark:bg-slate-900 sm:h-9"
     >
       {children}
     </select>
@@ -617,9 +617,9 @@ function Modal({ open, title, description, onClose, children, footer }) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
-      <div className="flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-950">
-        <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5 dark:border-slate-800">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-0 backdrop-blur-sm sm:p-4">
+      <div className="flex h-[100dvh] w-full max-w-5xl flex-col overflow-hidden rounded-none border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-950 sm:h-auto sm:max-h-[90vh] sm:rounded-3xl">
+        <div className="flex items-start justify-between gap-4 border-b border-slate-200 px-4 py-4 sm:px-6 sm:py-5 dark:border-slate-800">
           <div>
             <h3 className="text-lg font-semibold text-slate-900 dark:text-white">{title}</h3>
             {description ? <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{description}</p> : null}
@@ -628,8 +628,8 @@ function Modal({ open, title, description, onClose, children, footer }) {
             <X className="h-4 w-4" />
           </Button>
         </div>
-        <div className="flex-1 overflow-y-auto px-6 py-5">{children}</div>
-        {footer ? <div className="border-t border-slate-200 px-6 py-4 dark:border-slate-800">{footer}</div> : null}
+        <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5">{children}</div>
+        {footer ? <div className="border-t border-slate-200 px-4 py-4 dark:border-slate-800 sm:px-6">{footer}</div> : null}
       </div>
     </div>
   );
@@ -679,7 +679,15 @@ function StatMiniCard({ label, value, icon: Icon }) {
 
 function ShellNavItem({ icon: Icon, label, active = false, onClick }) {
   return (
-    <button onClick={onClick} className={`flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left text-sm transition ${active ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"}`}>
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm transition sm:px-3 sm:py-2.5 ${
+        active
+          ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900"
+          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+      }`}
+    >
       <Icon className="h-4 w-4" />
       <span>{label}</span>
     </button>
@@ -852,6 +860,7 @@ export default function PigFarmBudgetDashboard() {
   const [mastersDragState, setMastersDragState] = useState({ kind: "", id: "" });
   const [expenseDialogOpen, setExpenseDialogOpen] = useState(false);
   const [saleDialogOpen, setSaleDialogOpen] = useState(false);
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
   const [expenseForm, setExpenseForm] = useState(createExpenseDraft);
   const [saleForm, setSaleForm] = useState(createSaleDraft);
   const [farmTypeForm, setFarmTypeForm] = useState({ name: "", sale_type: "per_kilo" });
@@ -905,6 +914,19 @@ export default function PigFarmBudgetDashboard() {
       listener.subscription.unsubscribe();
     };
   }, [authEnabled]);
+
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setSidebarOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [sidebarOpen]);
+
+  useEffect(() => {
+    setQuickAddOpen(false);
+  }, [activePage]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1960,21 +1982,26 @@ export default function PigFarmBudgetDashboard() {
 
   const sidebar = (
     <div className="flex h-full flex-col bg-white dark:bg-slate-950">
-      <div className="flex items-center gap-3 border-b border-slate-200 px-5 py-5 dark:border-slate-800">
-        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-slate-900"><PiggyBank className="h-5 w-5" /></div>
-        <div>
-          <p className="text-sm font-semibold text-slate-900 dark:text-white">Agri Business Tracker</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Farm budget tracker</p>
+      <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-5 py-5 dark:border-slate-800">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-slate-900"><PiggyBank className="h-5 w-5" /></div>
+          <div>
+            <p className="text-sm font-semibold text-slate-900 dark:text-white">Agri Business Tracker</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Farm budget tracker</p>
+          </div>
         </div>
+        <Button variant="ghost" size="icon" className="rounded-2xl lg:hidden" onClick={() => setSidebarOpen(false)}>
+          <X className="h-4 w-4" />
+        </Button>
       </div>
       <ScrollArea className="flex-1 px-3 py-4">
         <div className="space-y-6">
           <div className="space-y-1.5">
             <p className="px-3 text-xs font-medium uppercase tracking-[0.18em] text-slate-400">Workspace</p>
-            <ShellNavItem icon={LayoutDashboard} label="Dashboard" active={activePage === "dashboard"} onClick={() => setActivePage("dashboard")} />
-            <ShellNavItem icon={Receipt} label="Expenses" active={activePage === "expenses"} onClick={() => setActivePage("expenses")} />
-            <ShellNavItem icon={CircleDollarSign} label="Sales" active={activePage === "sales"} onClick={() => setActivePage("sales")} />
-            <ShellNavItem icon={BarChart3} label="Reports" active={activePage === "reports"} onClick={() => setActivePage("reports")} />
+            <ShellNavItem icon={LayoutDashboard} label="Dashboard" active={activePage === "dashboard"} onClick={() => { setActivePage("dashboard"); setSidebarOpen(false); }} />
+            <ShellNavItem icon={Receipt} label="Expenses" active={activePage === "expenses"} onClick={() => { setActivePage("expenses"); setSidebarOpen(false); }} />
+            <ShellNavItem icon={CircleDollarSign} label="Sales" active={activePage === "sales"} onClick={() => { setActivePage("sales"); setSidebarOpen(false); }} />
+            <ShellNavItem icon={BarChart3} label="Reports" active={activePage === "reports"} onClick={() => { setActivePage("reports"); setSidebarOpen(false); }} />
           </div>
         </div>
       </ScrollArea>
@@ -1986,7 +2013,19 @@ export default function PigFarmBudgetDashboard() {
       <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-white">
         <div className="flex min-h-screen">
           <aside className="hidden w-72 border-r border-slate-200 bg-white lg:block dark:border-slate-800 dark:bg-slate-950">{sidebar}</aside>
-          {sidebarOpen && <div className="fixed inset-0 z-40 bg-slate-950/30 lg:hidden" onClick={() => setSidebarOpen(false)}><div className="h-full w-72 bg-white dark:bg-slate-950" onClick={(e) => e.stopPropagation()}>{sidebar}</div></div>}
+          {sidebarOpen ? (
+            <div className="fixed inset-0 z-40 lg:hidden">
+              <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-[1px]" onClick={() => setSidebarOpen(false)} />
+              <div
+                className={`absolute inset-y-0 left-0 w-[min(20rem,calc(100vw-1.5rem))] max-w-full border-r border-slate-200 bg-white shadow-2xl transition-transform duration-300 ease-out dark:border-slate-800 dark:bg-slate-950 ${
+                  sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                }`}
+                onClick={(event) => event.stopPropagation()}
+              >
+                {sidebar}
+              </div>
+            </div>
+          ) : null}
 
           <main className="flex-1 min-w-0">
             <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90">
@@ -2008,9 +2047,6 @@ export default function PigFarmBudgetDashboard() {
                   ) : null}
                   <Button variant="outline" size="icon" className="rounded-2xl shrink-0" onClick={() => setDark((d) => !d)}>
                     {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-                  </Button>
-                  <Button variant="outline" size="icon" className="rounded-2xl shrink-0 lg:hidden">
-                    <Bell className="h-4 w-4" />
                   </Button>
                   {authEnabled ? (
                     <Button variant="outline" className="rounded-2xl text-xs px-2 sm:text-sm sm:px-4 shrink-0" onClick={handleSignOut}>
@@ -2087,7 +2123,7 @@ export default function PigFarmBudgetDashboard() {
                         <Button
                           type="button"
                           variant="outline"
-                          className="rounded-2xl"
+                          className="w-full rounded-2xl sm:w-auto"
                           onClick={() => {
                             setReportFarmTypeId("");
                             setReportFarmId("");
@@ -2141,7 +2177,7 @@ export default function PigFarmBudgetDashboard() {
                             : "Maintain generic master tables for all farm types."}
                       </p>
                     </div>
-                    <Button variant="outline" onClick={() => setActivePage("dashboard")} className="rounded-2xl shrink-0 text-sm">
+                    <Button variant="outline" onClick={() => setActivePage("dashboard")} className="w-full rounded-2xl text-sm sm:w-auto shrink-0">
                       Back
                     </Button>
                   </div>
@@ -2374,7 +2410,7 @@ export default function PigFarmBudgetDashboard() {
                                       <Button
                                         variant="outline"
                                         size="sm"
-                                        className="rounded-xl"
+                                        className="w-full rounded-xl sm:w-auto"
                                         type="button"
                                         onClick={() => setMastersCategoryFilterId("")}
                                       >
@@ -2458,14 +2494,14 @@ export default function PigFarmBudgetDashboard() {
                                         </CardDescription>
                                       </div>
                                       {mastersCategoryFilterId ? (
-                                        <Button
-                                          variant="outline"
-                                          size="sm"
-                                          className="rounded-xl"
-                                          type="button"
-                                          onClick={() => setMastersCategoryFilterId("")}
-                                        >
-                                          Clear filter
+                                          <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="w-full rounded-xl sm:w-auto"
+                                            type="button"
+                                            onClick={() => setMastersCategoryFilterId("")}
+                                          >
+                                            Clear filter
                                         </Button>
                                       ) : null}
                                     </CardHeader>
@@ -2612,7 +2648,7 @@ export default function PigFarmBudgetDashboard() {
                           <Button
                             type="button"
                             variant="outline"
-                            className="rounded-2xl"
+                            className="w-full rounded-2xl sm:w-auto"
                             onClick={() => {
                               setReportFarmTypeId("");
                               setReportFarmId("");
@@ -2774,7 +2810,7 @@ export default function PigFarmBudgetDashboard() {
                           <Button
                             type="button"
                             variant="outline"
-                            className="rounded-2xl"
+                            className="w-full rounded-2xl sm:w-auto"
                             onClick={() => {
                               setReportFarmTypeId("");
                               setReportFarmId("");
@@ -2807,83 +2843,143 @@ export default function PigFarmBudgetDashboard() {
                             <CardDescription className="hidden sm:block">Update the rows below as needed.</CardDescription>
                           </div>
                           <div className="flex flex-wrap items-center gap-2">
-                            <Button variant="outline" onClick={() => appendSaleDrafts(1)} className="rounded-2xl text-sm" type="button" disabled={!recordWritesEnabled}>
+                            <Button variant="outline" onClick={() => appendSaleDrafts(1)} className="w-full rounded-2xl text-sm sm:w-auto" type="button" disabled={!recordWritesEnabled}>
                               <Plus className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
                               <span className="sm:hidden">Add</span>
                               <span className="hidden sm:inline">Add Row</span>
                             </Button>
-                            <Button onClick={() => setSaleDialogOpen(true)} className="rounded-2xl text-sm" type="button" disabled={!recordWritesEnabled}>
+                            <Button onClick={() => setSaleDialogOpen(true)} className="w-full rounded-2xl text-sm sm:w-auto" type="button" disabled={!recordWritesEnabled}>
                               New
                             </Button>
                           </div>
                         </CardHeader>
-                        <CardContent>
-                          <ScrollArea className="w-full">
-                            <Table className="min-w-[700px]">
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead className="whitespace-nowrap">Date</TableHead>
-                                  <TableHead className="whitespace-nowrap">Farm</TableHead>
-                                  <TableHead className="whitespace-nowrap">Batch</TableHead>
-                                  <TableHead className="whitespace-nowrap">{salesQuantityHeader}</TableHead>
-                                  <TableHead className="whitespace-nowrap">{salesPriceHeader}</TableHead>
-                                  <TableHead className="whitespace-nowrap">Total</TableHead>
-                                  <TableHead className="whitespace-nowrap">Remarks</TableHead>
-                                  <TableHead className="w-[72px]">Action</TableHead>
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {visibleSalesRows.map(({ row, originalIndex }) => (
-                                  <TableRow key={row.id}>
-                                    <TableCell><DateCell value={row.date} onChange={(v) => updateSale(originalIndex, "date", v)} /></TableCell>
-                                    <TableCell>
-                                      <SelectCell value={row.farm_id || ""} onChange={(v) => updateSale(originalIndex, "farm_id", v)}>
-                                        <option value="">Farm</option>
-                                        {masterData.farms.map((farm) => (
-                                          <option key={farm.id} value={farm.id}>
-                                            {farm.name}
-                                          </option>
-                                        ))}
-                                      </SelectCell>
-                                    </TableCell>
-                                    <TableCell>
-                                      <SelectCell value={row.batch_id || ""} onChange={(v) => updateSale(originalIndex, "batch_id", v)}>
-                                        <option value="">Batch</option>
-                                        {getBatchesByFarm(masterData, row.farm_id || defaultFarmId).map((batch) => (
-                                          <option key={batch.id} value={batch.id}>
-                                            {batch.name}
-                                          </option>
-                                        ))}
-                                      </SelectCell>
-                                    </TableCell>
-                                    <TableCell><NumberCell value={row.quantity} onChange={(v) => updateSale(originalIndex, "quantity", v)} /></TableCell>
-                                    <TableCell><NumberCell value={row.pricePerKg ?? row.unit_price ?? null} onChange={(v) => updateSale(originalIndex, "pricePerKg", v)} /></TableCell>
-                                    <TableCell className="font-medium">
-                                      {row.total_amount == null && row.quantity == null && row.pricePerKg == null && row.unit_price == null ? "" : currency(getSaleAmount(row))}
-                                    </TableCell>
-                                    <TableCell><TextCell value={row.remarks || row.name || ""} onChange={(v) => updateSale(originalIndex, "remarks", v)} placeholder="Remarks" /></TableCell>
-                                    <TableCell>
-                                      {isDraftId(row.id) ? (
-                                        <div className="flex items-center gap-2">
-                                          <Button variant="outline" size="sm" className="rounded-xl" onClick={() => saveSaleGridRow(originalIndex)} type="button" disabled={!recordWritesEnabled}>
-                                            Save
-                                          </Button>
-                                          <Button variant="ghost" size="icon" className="rounded-xl" onClick={() => discardSaleGridRow(originalIndex)} type="button">
-                                            <Trash2 className="h-4 w-4 text-slate-500" />
-                                          </Button>
-                                        </div>
-                                      ) : (
-                                        <Button variant="ghost" size="icon" className="rounded-xl" onClick={() => deleteSaleRow(originalIndex)} type="button">
+                        <CardContent className="space-y-4">
+                          <div className="space-y-3 md:hidden">
+                            {visibleSalesRows.map(({ row, originalIndex }) => {
+                              const saleLabel = getSaleLabel(row, masterData);
+                              const rowTotal =
+                                row.total_amount == null && row.quantity == null && row.pricePerKg == null && row.unit_price == null
+                                  ? ""
+                                  : currency(getSaleAmount(row));
+
+                              return (
+                                <div key={row.id} className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950">
+                                  <div className="flex items-start justify-between gap-3">
+                                    <div className="min-w-0">
+                                      <p className="truncate font-medium">{saleLabel.item || "Sale"}</p>
+                                      <p className="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
+                                        {row.date || "No date"} · {saleLabel.farm || "No farm"}
+                                        {saleLabel.batch ? ` · ${saleLabel.batch}` : ""}
+                                      </p>
+                                    </div>
+                                    <div className="text-right">
+                                      <p className="text-sm font-semibold">{rowTotal || "—"}</p>
+                                      <p className="text-xs text-slate-500 dark:text-slate-400">Total</p>
+                                    </div>
+                                  </div>
+                                  <div className="mt-3 grid grid-cols-2 gap-2">
+                                    <div className="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-900/60">
+                                      <p className="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">Quantity</p>
+                                      <p className="mt-1 text-sm font-medium">{row.quantity ?? "—"}</p>
+                                    </div>
+                                    <div className="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-900/60">
+                                      <p className="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">Price</p>
+                                      <p className="mt-1 text-sm font-medium">{row.pricePerKg ?? row.unit_price ?? "—"}</p>
+                                    </div>
+                                    <div className="col-span-2 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-900/60">
+                                      <p className="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">Remarks</p>
+                                      <p className="mt-1 truncate text-sm font-medium">{row.remarks || row.name || "—"}</p>
+                                    </div>
+                                  </div>
+                                  <div className="mt-3 flex flex-wrap gap-2">
+                                    {isDraftId(row.id) ? (
+                                      <>
+                                        <Button variant="outline" size="sm" className="min-w-0 flex-1 rounded-xl" onClick={() => saveSaleGridRow(originalIndex)} type="button" disabled={!recordWritesEnabled}>
+                                          Save
+                                        </Button>
+                                        <Button variant="ghost" size="icon" className="size-10 rounded-xl" onClick={() => discardSaleGridRow(originalIndex)} type="button">
                                           <Trash2 className="h-4 w-4 text-slate-500" />
                                         </Button>
-                                      )}
-                                    </TableCell>
+                                      </>
+                                    ) : (
+                                      <Button variant="ghost" size="sm" className="w-full rounded-xl" onClick={() => deleteSaleRow(originalIndex)} type="button">
+                                        Delete
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                            {!visibleSalesRows.length ? <p className="text-sm text-slate-500 dark:text-slate-400">No sales rows match the current filters.</p> : null}
+                          </div>
+                          <div className="hidden md:block">
+                            <ScrollArea className="w-full">
+                              <Table className="min-w-[700px]">
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead className="whitespace-nowrap">Date</TableHead>
+                                    <TableHead className="whitespace-nowrap">Farm</TableHead>
+                                    <TableHead className="whitespace-nowrap">Batch</TableHead>
+                                    <TableHead className="whitespace-nowrap">{salesQuantityHeader}</TableHead>
+                                    <TableHead className="whitespace-nowrap">{salesPriceHeader}</TableHead>
+                                    <TableHead className="whitespace-nowrap">Total</TableHead>
+                                    <TableHead className="whitespace-nowrap">Remarks</TableHead>
+                                    <TableHead className="w-[72px]">Action</TableHead>
                                   </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </ScrollArea>
-                          <div className="mt-4 flex justify-between border-t border-slate-200 pt-4 text-sm dark:border-slate-800">
+                                </TableHeader>
+                                <TableBody>
+                                  {visibleSalesRows.map(({ row, originalIndex }) => (
+                                    <TableRow key={row.id}>
+                                      <TableCell><DateCell value={row.date} onChange={(v) => updateSale(originalIndex, "date", v)} /></TableCell>
+                                      <TableCell>
+                                        <SelectCell value={row.farm_id || ""} onChange={(v) => updateSale(originalIndex, "farm_id", v)}>
+                                          <option value="">Farm</option>
+                                          {masterData.farms.map((farm) => (
+                                            <option key={farm.id} value={farm.id}>
+                                              {farm.name}
+                                            </option>
+                                          ))}
+                                        </SelectCell>
+                                      </TableCell>
+                                      <TableCell>
+                                        <SelectCell value={row.batch_id || ""} onChange={(v) => updateSale(originalIndex, "batch_id", v)}>
+                                          <option value="">Batch</option>
+                                          {getBatchesByFarm(masterData, row.farm_id || defaultFarmId).map((batch) => (
+                                            <option key={batch.id} value={batch.id}>
+                                              {batch.name}
+                                            </option>
+                                          ))}
+                                        </SelectCell>
+                                      </TableCell>
+                                      <TableCell><NumberCell value={row.quantity} onChange={(v) => updateSale(originalIndex, "quantity", v)} /></TableCell>
+                                      <TableCell><NumberCell value={row.pricePerKg ?? row.unit_price ?? null} onChange={(v) => updateSale(originalIndex, "pricePerKg", v)} /></TableCell>
+                                      <TableCell className="font-medium">
+                                        {row.total_amount == null && row.quantity == null && row.pricePerKg == null && row.unit_price == null ? "" : currency(getSaleAmount(row))}
+                                      </TableCell>
+                                      <TableCell><TextCell value={row.remarks || row.name || ""} onChange={(v) => updateSale(originalIndex, "remarks", v)} placeholder="Remarks" /></TableCell>
+                                      <TableCell>
+                                        {isDraftId(row.id) ? (
+                                          <div className="flex items-center gap-2">
+                                            <Button variant="outline" size="sm" className="rounded-xl" onClick={() => saveSaleGridRow(originalIndex)} type="button" disabled={!recordWritesEnabled}>
+                                              Save
+                                            </Button>
+                                            <Button variant="ghost" size="icon" className="rounded-xl" onClick={() => discardSaleGridRow(originalIndex)} type="button">
+                                              <Trash2 className="h-4 w-4 text-slate-500" />
+                                            </Button>
+                                          </div>
+                                        ) : (
+                                          <Button variant="ghost" size="icon" className="rounded-xl" onClick={() => deleteSaleRow(originalIndex)} type="button">
+                                            <Trash2 className="h-4 w-4 text-slate-500" />
+                                          </Button>
+                                        )}
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </ScrollArea>
+                          </div>
+                          <div className="flex justify-between border-t border-slate-200 pt-4 text-sm dark:border-slate-800">
                             <span className="font-medium">Total</span>
                             <span className="font-semibold">{currency(visibleSalesTotal)}</span>
                           </div>
@@ -2940,7 +3036,7 @@ export default function PigFarmBudgetDashboard() {
                           <Button
                             type="button"
                             variant="outline"
-                            className="rounded-2xl"
+                            className="w-full rounded-2xl sm:w-auto"
                             onClick={() => {
                               setReportFarmTypeId("");
                               setReportFarmId("");
@@ -2973,106 +3069,174 @@ export default function PigFarmBudgetDashboard() {
                             <CardDescription className="hidden sm:block">Track feed, piglets, and other costs.</CardDescription>
                           </div>
                           <div className="flex flex-wrap items-center gap-2">
-                            <Button variant="outline" onClick={() => appendExpenseDrafts(1)} className="rounded-2xl text-sm" type="button" disabled={!recordWritesEnabled}>
+                            <Button variant="outline" onClick={() => appendExpenseDrafts(1)} className="w-full rounded-2xl text-sm sm:w-auto" type="button" disabled={!recordWritesEnabled}>
                               <Plus className="mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
                               <span className="sm:hidden">Add</span>
                               <span className="hidden sm:inline">Add Row</span>
                             </Button>
-                            <Button onClick={() => setExpenseDialogOpen(true)} className="rounded-2xl text-sm" type="button" disabled={!recordWritesEnabled}>
+                            <Button onClick={() => setExpenseDialogOpen(true)} className="w-full rounded-2xl text-sm sm:w-auto" type="button" disabled={!recordWritesEnabled}>
                               New
                             </Button>
                           </div>
                         </CardHeader>
-                        <CardContent>
-                          <ScrollArea className="w-full">
-                            <Table className="min-w-[800px]">
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead className="whitespace-nowrap">Date</TableHead>
-                                  <TableHead className="whitespace-nowrap">Farm</TableHead>
-                                  <TableHead className="whitespace-nowrap">Batch</TableHead>
-                                  <TableHead className="whitespace-nowrap">Category</TableHead>
-                                  <TableHead className="whitespace-nowrap">Subcategory</TableHead>
-                                  <TableHead className="whitespace-nowrap">Qty</TableHead>
-                                  <TableHead className="whitespace-nowrap">Unit Cost</TableHead>
-                                  <TableHead className="whitespace-nowrap">Total</TableHead>
-                                  <TableHead className="whitespace-nowrap">Remarks</TableHead>
-                                  <TableHead className="w-[72px]">Action</TableHead>
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {visibleExpenseRows.map(({ row, originalIndex }) => (
-                                  <TableRow key={row.id}>
-                                    <TableCell><DateCell value={row.date} onChange={(v) => updateExpense(originalIndex, "date", v)} /></TableCell>
-                                    <TableCell>
-                                      <SelectCell value={row.farm_id || ""} onChange={(v) => updateExpense(originalIndex, "farm_id", v)}>
-                                        <option value="">Farm</option>
-                                        {masterData.farms.map((farm) => (
-                                          <option key={farm.id} value={farm.id}>
-                                            {farm.name}
-                                          </option>
-                                        ))}
-                                      </SelectCell>
-                                    </TableCell>
-                                    <TableCell>
-                                      <SelectCell value={row.batch_id || ""} onChange={(v) => updateExpense(originalIndex, "batch_id", v)}>
-                                        <option value="">Batch</option>
-                                        {getBatchesByFarm(masterData, row.farm_id || defaultFarmId).map((batch) => (
-                                          <option key={batch.id} value={batch.id}>
-                                            {batch.name}
-                                          </option>
-                                        ))}
-                                      </SelectCell>
-                                    </TableCell>
-                                    <TableCell>
-                                      <SelectCell value={row.category_id || ""} onChange={(v) => updateExpense(originalIndex, "category_id", v)}>
-                                        <option value="">Category</option>
-                                        {masterData.categories.map((category) => (
-                                          <option key={category.id} value={category.id}>
-                                            {category.name}
-                                          </option>
-                                        ))}
-                                      </SelectCell>
-                                    </TableCell>
-                                    <TableCell>
-                                      <SelectCell value={row.sub_category_id || ""} onChange={(v) => updateExpense(originalIndex, "sub_category_id", v)}>
-                                        <option value="">Subcategory</option>
-                                        {masterData.subCategories
-                                          .filter((sub) => !row.category_id || sub.category_id === row.category_id)
-                                          .map((sub) => (
-                                            <option key={sub.id} value={sub.id}>
-                                              {sub.name}
-                                            </option>
-                                          ))}
-                                      </SelectCell>
-                                    </TableCell>
-                                    <TableCell><NumberCell value={row.quantity} onChange={(v) => updateExpense(originalIndex, "quantity", v)} /></TableCell>
-                                    <TableCell><NumberCell value={row.unit_cost ?? row.amount ?? null} onChange={(v) => updateExpense(originalIndex, "unit_cost", v)} /></TableCell>
-                                    <TableCell className="font-medium">
-                                      {row.total_amount == null && row.quantity == null && row.unit_cost == null && row.amount == null ? "" : currency(getExpenseAmount(row))}
-                                    </TableCell>
-                                    <TableCell><TextCell value={row.remarks} onChange={(v) => updateExpense(originalIndex, "remarks", v)} placeholder="Remarks" /></TableCell>
-                                    <TableCell>
-                                      {isDraftId(row.id) ? (
-                                        <div className="flex items-center gap-2">
-                                          <Button variant="outline" size="sm" className="rounded-xl" onClick={() => saveExpenseGridRow(originalIndex)} type="button" disabled={!recordWritesEnabled}>
-                                            Save
-                                          </Button>
-                                          <Button variant="ghost" size="icon" className="rounded-xl" onClick={() => discardExpenseGridRow(originalIndex)} type="button">
-                                            <Trash2 className="h-4 w-4 text-slate-500" />
-                                          </Button>
-                                        </div>
-                                      ) : (
-                                        <Button variant="ghost" size="icon" className="rounded-xl" onClick={() => deleteExpenseRow(originalIndex)} type="button">
+                        <CardContent className="space-y-4">
+                          <div className="space-y-3 md:hidden">
+                            {visibleExpenseRows.map(({ row, originalIndex }) => {
+                              const expenseLabel = getExpenseLabel(row, masterData);
+                              const rowTotal =
+                                row.total_amount == null && row.quantity == null && row.unit_cost == null && row.amount == null
+                                  ? ""
+                                  : currency(getExpenseAmount(row));
+
+                              return (
+                                <div key={row.id} className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950">
+                                  <div className="flex items-start justify-between gap-3">
+                                    <div className="min-w-0">
+                                      <p className="truncate font-medium">{expenseLabel.subcategory || expenseLabel.category || "Expense"}</p>
+                                      <p className="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
+                                        {row.date || "No date"} · {expenseLabel.farm || "No farm"}
+                                        {expenseLabel.unit ? ` · ${expenseLabel.unit}` : ""}
+                                      </p>
+                                    </div>
+                                    <div className="text-right">
+                                      <p className="text-sm font-semibold">{rowTotal || "—"}</p>
+                                      <p className="text-xs text-slate-500 dark:text-slate-400">Total</p>
+                                    </div>
+                                  </div>
+                                  <div className="mt-3 grid grid-cols-2 gap-2">
+                                    <div className="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-900/60">
+                                      <p className="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">Category</p>
+                                      <p className="mt-1 truncate text-sm font-medium">{expenseLabel.category || "—"}</p>
+                                    </div>
+                                    <div className="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-900/60">
+                                      <p className="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">Subcategory</p>
+                                      <p className="mt-1 truncate text-sm font-medium">{expenseLabel.subcategory || "—"}</p>
+                                    </div>
+                                    <div className="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-900/60">
+                                      <p className="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">Qty</p>
+                                      <p className="mt-1 text-sm font-medium">{row.quantity ?? "—"}</p>
+                                    </div>
+                                    <div className="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-900/60">
+                                      <p className="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">Unit Cost</p>
+                                      <p className="mt-1 text-sm font-medium">{row.unit_cost ?? row.amount ?? "—"}</p>
+                                    </div>
+                                    <div className="col-span-2 rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-900/60">
+                                      <p className="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">Remarks</p>
+                                      <p className="mt-1 truncate text-sm font-medium">{row.remarks || "—"}</p>
+                                    </div>
+                                  </div>
+                                  <div className="mt-3 flex flex-wrap gap-2">
+                                    {isDraftId(row.id) ? (
+                                      <>
+                                        <Button variant="outline" size="sm" className="min-w-0 flex-1 rounded-xl" onClick={() => saveExpenseGridRow(originalIndex)} type="button" disabled={!recordWritesEnabled}>
+                                          Save
+                                        </Button>
+                                        <Button variant="ghost" size="icon" className="size-10 rounded-xl" onClick={() => discardExpenseGridRow(originalIndex)} type="button">
                                           <Trash2 className="h-4 w-4 text-slate-500" />
                                         </Button>
-                                      )}
-                                    </TableCell>
+                                      </>
+                                    ) : (
+                                      <Button variant="ghost" size="sm" className="w-full rounded-xl" onClick={() => deleteExpenseRow(originalIndex)} type="button">
+                                        Delete
+                                      </Button>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                            {!visibleExpenseRows.length ? <p className="text-sm text-slate-500 dark:text-slate-400">No expense rows match the current filters.</p> : null}
+                          </div>
+                          <div className="hidden md:block">
+                            <ScrollArea className="w-full">
+                              <Table className="min-w-[800px]">
+                                <TableHeader>
+                                  <TableRow>
+                                    <TableHead className="whitespace-nowrap">Date</TableHead>
+                                    <TableHead className="whitespace-nowrap">Farm</TableHead>
+                                    <TableHead className="whitespace-nowrap">Batch</TableHead>
+                                    <TableHead className="whitespace-nowrap">Category</TableHead>
+                                    <TableHead className="whitespace-nowrap">Subcategory</TableHead>
+                                    <TableHead className="whitespace-nowrap">Qty</TableHead>
+                                    <TableHead className="whitespace-nowrap">Unit Cost</TableHead>
+                                    <TableHead className="whitespace-nowrap">Total</TableHead>
+                                    <TableHead className="whitespace-nowrap">Remarks</TableHead>
+                                    <TableHead className="w-[72px]">Action</TableHead>
                                   </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </ScrollArea>
+                                </TableHeader>
+                                <TableBody>
+                                  {visibleExpenseRows.map(({ row, originalIndex }) => (
+                                    <TableRow key={row.id}>
+                                      <TableCell><DateCell value={row.date} onChange={(v) => updateExpense(originalIndex, "date", v)} /></TableCell>
+                                      <TableCell>
+                                        <SelectCell value={row.farm_id || ""} onChange={(v) => updateExpense(originalIndex, "farm_id", v)}>
+                                          <option value="">Farm</option>
+                                          {masterData.farms.map((farm) => (
+                                            <option key={farm.id} value={farm.id}>
+                                              {farm.name}
+                                            </option>
+                                          ))}
+                                        </SelectCell>
+                                      </TableCell>
+                                      <TableCell>
+                                        <SelectCell value={row.batch_id || ""} onChange={(v) => updateExpense(originalIndex, "batch_id", v)}>
+                                          <option value="">Batch</option>
+                                          {getBatchesByFarm(masterData, row.farm_id || defaultFarmId).map((batch) => (
+                                            <option key={batch.id} value={batch.id}>
+                                              {batch.name}
+                                            </option>
+                                          ))}
+                                        </SelectCell>
+                                      </TableCell>
+                                      <TableCell>
+                                        <SelectCell value={row.category_id || ""} onChange={(v) => updateExpense(originalIndex, "category_id", v)}>
+                                          <option value="">Category</option>
+                                          {masterData.categories.map((category) => (
+                                            <option key={category.id} value={category.id}>
+                                              {category.name}
+                                            </option>
+                                          ))}
+                                        </SelectCell>
+                                      </TableCell>
+                                      <TableCell>
+                                        <SelectCell value={row.sub_category_id || ""} onChange={(v) => updateExpense(originalIndex, "sub_category_id", v)}>
+                                          <option value="">Subcategory</option>
+                                          {masterData.subCategories
+                                            .filter((sub) => !row.category_id || sub.category_id === row.category_id)
+                                            .map((sub) => (
+                                              <option key={sub.id} value={sub.id}>
+                                                {sub.name}
+                                              </option>
+                                            ))}
+                                        </SelectCell>
+                                      </TableCell>
+                                      <TableCell><NumberCell value={row.quantity} onChange={(v) => updateExpense(originalIndex, "quantity", v)} /></TableCell>
+                                      <TableCell><NumberCell value={row.unit_cost ?? row.amount ?? null} onChange={(v) => updateExpense(originalIndex, "unit_cost", v)} /></TableCell>
+                                      <TableCell className="font-medium">
+                                        {row.total_amount == null && row.quantity == null && row.unit_cost == null && row.amount == null ? "" : currency(getExpenseAmount(row))}
+                                      </TableCell>
+                                      <TableCell><TextCell value={row.remarks} onChange={(v) => updateExpense(originalIndex, "remarks", v)} placeholder="Remarks" /></TableCell>
+                                      <TableCell>
+                                        {isDraftId(row.id) ? (
+                                          <div className="flex items-center gap-2">
+                                            <Button variant="outline" size="sm" className="rounded-xl" onClick={() => saveExpenseGridRow(originalIndex)} type="button" disabled={!recordWritesEnabled}>
+                                              Save
+                                            </Button>
+                                            <Button variant="ghost" size="icon" className="rounded-xl" onClick={() => discardExpenseGridRow(originalIndex)} type="button">
+                                              <Trash2 className="h-4 w-4 text-slate-500" />
+                                            </Button>
+                                          </div>
+                                        ) : (
+                                          <Button variant="ghost" size="icon" className="rounded-xl" onClick={() => deleteExpenseRow(originalIndex)} type="button">
+                                            <Trash2 className="h-4 w-4 text-slate-500" />
+                                          </Button>
+                                        )}
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </ScrollArea>
+                          </div>
                         </CardContent>
                       </Card>
                     </>
@@ -3080,17 +3244,69 @@ export default function PigFarmBudgetDashboard() {
                 </section>
               )}
 
+              {activePage === "dashboard" ? (
+                <div
+                  className="fixed bottom-4 right-4 z-30 sm:bottom-6 sm:right-6"
+                  style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+                >
+                  <div className="flex flex-col items-end gap-3">
+                    <div
+                      className={`flex flex-col items-end gap-2 rounded-3xl border border-slate-200 bg-white p-2 shadow-2xl shadow-slate-900/15 transition-all duration-200 dark:border-slate-800 dark:bg-slate-950 ${
+                        quickAddOpen ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-0"
+                      }`}
+                      aria-hidden={!quickAddOpen}
+                    >
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-44 justify-start rounded-2xl text-sm shadow-sm sm:w-48"
+                        onClick={() => {
+                          setExpenseDialogOpen(true);
+                          setQuickAddOpen(false);
+                        }}
+                        disabled={!recordWritesEnabled}
+                      >
+                        <Receipt className="mr-2 h-4 w-4" />
+                        Add Expense
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-44 justify-start rounded-2xl text-sm shadow-sm sm:w-48"
+                        onClick={() => {
+                          setSaleDialogOpen(true);
+                          setQuickAddOpen(false);
+                        }}
+                        disabled={!recordWritesEnabled}
+                      >
+                        <CircleDollarSign className="mr-2 h-4 w-4" />
+                        Add Sale
+                      </Button>
+                    </div>
+                    <Button
+                      type="button"
+                      className="h-14 w-14 rounded-full shadow-xl shadow-emerald-900/20 ring-1 ring-black/5 sm:h-16 sm:w-16"
+                      onClick={() => setQuickAddOpen((current) => !current)}
+                      aria-expanded={quickAddOpen}
+                      aria-label={quickAddOpen ? "Close quick add menu" : "Open quick add menu"}
+                    >
+                      {quickAddOpen ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+                    </Button>
+                  </div>
+                </div>
+              ) : null}
+
               <Modal
                 open={expenseDialogOpen}
                 title="New Expense"
                 description=""
                 onClose={() => setExpenseDialogOpen(false)}
                 footer={
-                  <div className="flex items-center justify-end gap-3">
-                    <Button variant="outline" type="button" className="rounded-2xl" onClick={() => setExpenseDialogOpen(false)}>
+                  <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end">
+                    <Button variant="outline" type="button" className="w-full rounded-2xl sm:w-auto" onClick={() => setExpenseDialogOpen(false)}>
                       Cancel
                     </Button>
-                    <Button type="submit" form="expense-create-form" className="rounded-2xl" disabled={!recordWritesEnabled}>
+                    <Button type="submit" form="expense-create-form" className="w-full rounded-2xl sm:w-auto" disabled={!recordWritesEnabled}>
                       Save Expense
                     </Button>
                   </div>
@@ -3245,11 +3461,11 @@ export default function PigFarmBudgetDashboard() {
                 description=""
                 onClose={() => setSaleDialogOpen(false)}
                 footer={
-                  <div className="flex items-center justify-end gap-3">
-                    <Button variant="outline" type="button" className="rounded-2xl" onClick={() => setSaleDialogOpen(false)}>
+                  <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end">
+                    <Button variant="outline" type="button" className="w-full rounded-2xl sm:w-auto" onClick={() => setSaleDialogOpen(false)}>
                       Cancel
                     </Button>
-                    <Button type="submit" form="sale-create-form" className="rounded-2xl" disabled={!recordWritesEnabled}>
+                    <Button type="submit" form="sale-create-form" className="w-full rounded-2xl sm:w-auto" disabled={!recordWritesEnabled}>
                       Save Sale
                     </Button>
                   </div>
